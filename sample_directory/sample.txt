@@ -1,0 +1,11 @@
+Artificial Intelligence (AI) is changing the way people work and live.
+AI is used in healthcare, education, finance, transportation, and many other fields.
+
+Machine Learning is a branch of AI that enables computers to learn from data.
+Deep Learning is a subset of Machine Learning that uses neural networks.
+
+Large Language Models (LLMs) such as Gemini, GPT, and Claude can understand and generate human language.
+These models are useful for chatbots, summarization, translation, and question answering.
+
+Text splitting is an important step in Retrieval-Augmented Generation (RAG).
+It divides long documents into smaller chunks before generating embeddings.
