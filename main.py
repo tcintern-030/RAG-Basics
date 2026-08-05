@@ -1,9 +1,20 @@
+import os
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+embeddings = GoogleGenerativeAIEmbeddings(
+    model="models/gemini-embedding-001",
+    google_api_key=os.getenv("GEMINI_API_KEY")
+)
 
 """
 loader = TextLoader("sample_directory/sample.txt")
@@ -20,7 +31,11 @@ dir_loader = DirectoryLoader(
 directory = dir_loader.load()
 
 print("\n\nDocuments from directory:")
-print(directory)
+
+for i, doc in enumerate(directory):
+    print(f"Document {i+1}:")
+    print(doc)
+    print("\n")
 
 def split_documents(documents, chunk_size=1000, chunk_overlap=0):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -38,3 +53,13 @@ for i, chunk in enumerate(chunks):
     print(chunk)
     print("\n")
 
+print("\nGenerating Embeddings...\n")
+
+for i, chunk in enumerate(chunks):
+    text = chunk.page_content
+    embedding = embeddings.embed_query(text)
+
+    print(f"Chunk {i+1}")
+    print(f"Embedding Dimension: {len(embedding)}")
+    print(f"First 5 elements: {embedding[:5]}")
+    print("\n")
