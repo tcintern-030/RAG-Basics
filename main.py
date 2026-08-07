@@ -6,15 +6,11 @@ from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_chroma import Chroma
 
 from dotenv import load_dotenv
 
 load_dotenv()
-
-embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/gemini-embedding-001",
-    google_api_key=os.getenv("GEMINI_API_KEY")
-)
 
 """
 loader = TextLoader("sample_directory/sample.txt")
@@ -30,12 +26,14 @@ dir_loader = DirectoryLoader(
 )
 directory = dir_loader.load()
 
+"""
 print("\n\nDocuments from directory:")
 
 for i, doc in enumerate(directory):
     print(f"Document {i+1}:")
     print(doc)
     print("\n")
+"""
 
 def split_documents(documents, chunk_size=1000, chunk_overlap=0):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -46,13 +44,25 @@ def split_documents(documents, chunk_size=1000, chunk_overlap=0):
 
 chunks = split_documents(directory)
 
+"""
 print("\n\nChunks:")
 
 for i, chunk in enumerate(chunks):
     print(f"Chunk {i+1}:")
     print(chunk)
     print("\n")
+"""
 
+def create_embeddings():
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/gemini-embedding-001",
+        google_api_key=os.getenv("GEMINI_API_KEY")
+    )
+    return embeddings
+
+embeddings = create_embeddings()
+
+"""
 print("\nGenerating Embeddings...\n")
 
 for i, chunk in enumerate(chunks):
@@ -63,3 +73,23 @@ for i, chunk in enumerate(chunks):
     print(f"Embedding Dimension: {len(embedding)}")
     print(f"First 5 elements: {embedding[:5]}")
     print("\n")
+
+"""
+def create_vector_db(chunks, embeddings):
+    vector_db = Chroma.from_documents(
+        documents=chunks,
+        embedding=embeddings,
+        persist_directory="vector_db"
+    )
+
+    return vector_db
+
+vector_db = create_vector_db(chunks, embeddings)
+
+"""
+results = vector_db.get()
+
+print(results.keys())
+print(results["documents"])
+print(results["metadatas"])
+"""
