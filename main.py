@@ -51,6 +51,7 @@ for i, chunk in enumerate(chunks):
     print(f"Chunk {i+1}:")
     print(chunk)
     print("\n")
+
 """
 
 def create_embeddings():
@@ -75,6 +76,7 @@ for i, chunk in enumerate(chunks):
     print("\n")
 
 """
+
 def create_vector_db(chunks, embeddings):
     vector_db = Chroma.from_documents(
         documents=chunks,
@@ -85,6 +87,7 @@ def create_vector_db(chunks, embeddings):
     return vector_db
 
 vector_db = create_vector_db(chunks, embeddings)
+
 
 """
 results = vector_db.get()
